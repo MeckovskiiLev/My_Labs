@@ -1,0 +1,1 @@
+add_library(lib lib.cpp lib.h bmp.cpp bmp.h picture.cpp picture.h)

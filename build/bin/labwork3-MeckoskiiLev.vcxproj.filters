@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\levfr\github-classroom\is-itmo-c-24\labwork3-MeckovskiiLev\bin\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\levfr\github-classroom\is-itmo-c-24\labwork3-MeckovskiiLev\bin\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{D0B68284-1393-31E8-B696-9E0C05D55344}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

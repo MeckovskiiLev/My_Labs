@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\levfr\github-classroom\is-itmo-c-24\labwork3-MeckovskiiLev\build\CMakeFiles\e03f4c1e2b19058efe0acb31cd653e37\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{2A7D046C-21DD-33CD-809E-97DC29AAE9F0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
