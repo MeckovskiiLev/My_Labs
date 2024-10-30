@@ -1,4 +1,0 @@
-C:/Users/levfr/github-classroom/is-itmo-c-24/labwork3-MeckovskiiLev/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/levfr/github-classroom/is-itmo-c-24/labwork3-MeckovskiiLev/build/CMakeFiles/ZERO_CHECK.dir
-C:/Users/levfr/github-classroom/is-itmo-c-24/labwork3-MeckovskiiLev/build/lib/CMakeFiles/lib.dir
-C:/Users/levfr/github-classroom/is-itmo-c-24/labwork3-MeckovskiiLev/build/bin/CMakeFiles/labwork3-MeckoskiiLev.dir
