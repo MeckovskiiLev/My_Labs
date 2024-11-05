@@ -135,7 +135,7 @@ void Image::Export(const char* path, uint64_t** matrix, int32_t count = 0)
     for (int y = m_height - 1; y  >= 0; y--) {
         for (int x = m_width-1; x >= 0; x-=2) {
             value = matrix[y][x];
-            if (x + 1 < m_width) {
+            if (x - 1 >= 0) {
                 value_two = matrix[y][x-1];
 
             } else {
