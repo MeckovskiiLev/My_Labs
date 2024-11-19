@@ -25,16 +25,9 @@ namespace ArgumentParser {
                             std::string name_of_param = arg.substr(2, index_of_eq - 2);
                             std::string value = arg.substr(index_of_eq + 1);
                             if (std::find(required_args.begin(), required_args.end(), name_of_param) != required_args.end()) {
-                                // if (arguments_int.find(name_of_param) != arguments_int.end()) {
-                                //     if (CheckIfInt(value)) {
-                                //         arguments_int[name_of_param].push_back(std::stoi(value));
-                                //     } else {
-                                //         std::cerr << "Value for Int argument was not an int value!";
-                                //         return false;
-                                //     } 
-                                // } else {
+                                
                                     arguments[name_of_param].push_back(value);
-                                //}
+
                             } else if (std::find(int_required_args.begin(), int_required_args.end(), name_of_param) != int_required_args.end()){
                                     if (CheckIfInt(value)) {
                                         arguments_int[name_of_param].push_back(std::stoi(value));
@@ -64,16 +57,9 @@ namespace ArgumentParser {
 
                                 
                                 if (i + 1 < args.size()) {
-                                    // if (arguments_int.find(name_of_param) != arguments_int.end()) {
-                                    //     if (CheckIfInt(args[i+1])) {
-                                    //         arguments_int[name_of_param].push_back(std::stoi(args[i+1]));
-                                    //     } else {
-                                    //         std::cerr << "Value for Int argument was not an int value!";
-                                    //         return false;
-                                    //     } 
-                                    // } else {
+                                    
                                         arguments[name_of_param].push_back(args[i+1]);
-                                    //}
+                                    
                                         i++;
                                 } 
                             } else if (std::find(no_equal_int.begin(), no_equal_int.end(), name_of_param) != no_equal_int.end()) {
@@ -106,16 +92,9 @@ namespace ArgumentParser {
                         std::string long_arg = short_to_long_map[short_arg];
                         
                         if (std::find(required_args.begin(), required_args.end(), long_arg) != required_args.end()) {
-                            // if (arguments_int.find(long_arg) != arguments_int.end()) {
-                            //     if (CheckIfInt(value)) {
-                            //         arguments_int[long_arg].push_back(std::stoi(value));
-                            //     } else {
-                            //         std::cerr << "Value for Int argument was not an int value!";
-                            //         return false;
-                            //     } 
-                            // } else {
+                            
                                 arguments[long_arg].push_back(value);
-                            //}
+                        
                         } else if (std::find(int_required_args.begin(), int_required_args.end(), long_arg) != int_required_args.end()) {
                                 if (CheckIfInt(value)) {
                                     arguments_int[long_arg].push_back(std::stoi(value));
@@ -142,16 +121,9 @@ namespace ArgumentParser {
                                 }
                             } else if (std::find(no_equal.begin(), no_equal.end(), long_arg) != no_equal.end()) {
                                 if (i + 1 < args.size()) {
-                                    // if (arguments_int.find(long_arg) != arguments_int.end()) {
-                                    //     if (CheckIfInt(args[i+1])) {
-                                    //         arguments_int[long_arg].push_back(std::stoi(args[i+1]));
-                                    //     } else {
-                                    //         std::cerr << "Value for Int argument was not an int value!";
-                                    //         return false;
-                                    //     } 
-                                    // } else {
+                                    
                                         arguments[long_arg].push_back(args[i+1]);
-                                    //}
+                                    
                                     i++;
                                 } 
                             } else if (std::find(no_equal_int.begin(), no_equal_int.end(), long_arg) != no_equal_int.end()) {
