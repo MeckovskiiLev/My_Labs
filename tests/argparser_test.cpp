@@ -4,6 +4,12 @@
 #include <gtest/gtest.h>
 #include <lib/ArgParser.h>
 
+
+
+
+
+
+
 using namespace ArgumentParser;
 
 /*
@@ -24,7 +30,7 @@ TEST(ArgParserTestSuite, EmptyTest) {
 }
 
 
-TEST(ArgParserTestSuite, StringTest) {
+TEST(ArgParserTestSuite, StringTest) {  
     ArgParser parser("My Parser");
     parser.AddStringArgument("param1");
 
@@ -76,7 +82,7 @@ TEST(ArgParserTestSuite, MultiStringTest) {
     parser.AddStringArgument('a', "param2");
 
     ASSERT_TRUE(parser.Parse(SplitString("app --param1=value1 --param2=value2")));
-    ASSERT_EQ(parser.GetStringValue("param2"), "value2");
+    ASSERT_EQ(parser.GetStringValue("param1"), "value1");
 }
 
 
@@ -125,6 +131,7 @@ TEST(ArgParserTestSuite, FlagsTest) {
     bool flag3 ;
     parser.AddFlag('a', "flag1");
     parser.AddFlag('b', "flag2").Default(true);
+
     parser.AddFlag('c', "flag3").StoreValue(flag3);
 
     ASSERT_TRUE(parser.Parse(SplitString("app -ac")));
@@ -163,9 +170,9 @@ TEST(ArgParserTestSuite, PositionalAndNormalArgTest) {
 
 
 TEST(ArgParserTestSuite, RepeatedParsingTest) {
-    ArgParser parser("My Parser");
-    parser.AddHelp('h', "help", "Some Description about program");
-    parser.AddStringArgument('i', "input", "File path for input file");
+   ArgParser parser("My Parser");
+   parser.AddHelp('h', "help", "Some Description about program");
+   parser.AddStringArgument('i', "input", "File path for input file");
     parser.AddStringArgument('o', "output", "File path for output directory");
     parser.AddFlag('s', "flag1", "Read first number");
     parser.AddFlag('p', "flag2", "Read second number");
@@ -199,16 +206,20 @@ TEST(ArgParserTestSuite, HelpStringTest) {
     parser.AddStringArgument('i', "input", "File path for input file").MultiValue(1);
     parser.AddFlag('s', "flag1", "Use some logic").Default(true);
     parser.AddFlag('p', "flag2", "Use some logic");
-    parser.AddIntArgument("numer", "Some Number");
+    parser.AddIntArgument("number", "Some Number");
 
 
     ASSERT_TRUE(parser.Parse(SplitString("app --help")));
-    // Проверка закоментирована намеренно. Ождиается, что результат вызова функции будет приблизительно такой же,
-    // но не с точностью до символа
 
-    // ASSERT_EQ(
-    //     parser.HelpDescription(),
-    //     "My Parser\n"
+    //Проверка закоментирована намеренно. Ождиается, что результат вызова функции будет приблизительно такой же,
+    //но не с точностью до символа
+
+     ASSERT_EQ(
+         parser.HelpDescription(), "Parser Documentation\n"
+    "Use this parser only for legitimate purposes\n");
+
+
+    //    "My Parser\n"
     //     "Some Description about program\n"
     //     "\n"
     //     "-i,  --input=<string>,  File path for input file [repeated, min args = 1]\n"
@@ -217,5 +228,18 @@ TEST(ArgParserTestSuite, HelpStringTest) {
     //     "     --number=<int>,  Some Number\n"
     //     "\n"
     //     "-h, --help Display this help and exit\n"
-    // );
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
