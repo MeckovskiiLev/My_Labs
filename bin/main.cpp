@@ -14,42 +14,59 @@ int main(int argc, char** argv) {
 
     std::vector<std::string> args(argv, argv + argc);
     
-    // parser.AddStringArgument('a', "param2");
+    //parser.AddStringArgument('a', "param2");
     
     //std::vector<int> values;
     // parser.AddIntArgument("param2");
     
-    //parser.AddIntArgument("Param1").MultiValue(0).Positional().StoreValues(values);
-    //parser.AddStringArgument("param1");
-    //parser.AddIntArgument("param1").MultiValue(1);//.Positional().StoreValues(values);
-    //parser.AddStringArgument("param2").MultiValue(2);
-    // parser.AddStringArgument('i', "input", "File path for input file");
-    //parser.AddHelp('h', "help", "Some Description about program");
-    //parser.AddFlag("flag");
+    // parser.AddIntArgument("Param1").MultiValue(0).Positional().StoreValues(values);
     // parser.AddStringArgument("param1");
-    // if (parser.Parse(args)) {
+    // parser.AddIntArgument("param1").MultiValue(1);//.Positional().StoreValues(values);
+    // parser.AddStringArgument("param2").MultiValue(2);
+    // parser.AddStringArgument('i', "input", "File path for input file");
+    // parser.AddHelp('h', "help", "Some Description about program");
+    // parser.AddFlag("flag");
+    // parser.AddStringArgument("param1");
+    //std::vector<int> int_values;
+    //size_t MinArgsCount = 10;
+    //parser.AddIntArgument('p', "param1").MultiValue(MinArgsCount).StoreValues(int_values);
+    std::vector<int> values;
+    parser.AddFlag('f', "flag", "Flag");
+    parser.AddIntArgument('n', "number", "Some Number");
+    parser.AddIntArgument("Param1").MultiValue(0).Positional().StoreValues(values);
+    if (parser.Parse(args)) {
         
-    //     std::cout << "Success!" << "\n";
-    //     for (const auto& [param, values] : parser.GetArguments()) { 
-    //         if (std::find(parser.GetReqArr().begin(), parser.GetReqArr().end(), param) != parser.GetReqArr().end())
-    //         std::cout << "Argument: " << param << std::endl;
-    //         for (const auto& value : values) {
-    //             if (parser.CheckIfInt(value)){
-    //                 std::cout << "  Value(int): " << value << std::endl;
-    //             } else {
-    //                 std::cout << "  Value(string): " << value << std::endl;
-    //             }
-    //         }
+        std::cout << "Success!" << "\n";
+        for (const auto& [param, values] : parser.GetArguments()) { 
+            if (std::find(parser.GetReqArr().begin(), parser.GetReqArr().end(), param) != parser.GetReqArr().end())
+            std::cout << "String Argument: " << param << std::endl;
+            for (const auto& value : values) {
+                if (parser.CheckIfInt(value)){
+                    std::cout << "  Value(int): " << value << std::endl;
+                } else {
+                    std::cout << "  Value(string): " << value << std::endl;
+                }
+            }
         
-    //     }
-    //     for (const auto& [flag, booly] : parser.GetFlags()) {
-    //         if (booly) {
-    //             std::cout << "Flag: " << flag << std::endl;
-    //         }
-    //     }
-    // } else {
-    //     std::cout << "Something went wrong ot help was declarated";
-    // }
+        }
+        for (const auto& [param, values] : parser.GetIntArguments()) { 
+            if (std::find(parser.GetReqArrInt().begin(), parser.GetReqArrInt().end(), param) != parser.GetReqArrInt().end())
+            std::cout << "Int Argument: " << param << std::endl;
+            for (const auto& value : values) {
+                
+                    std::cout << "  Value(int): " << value << std::endl;
+                
+            }
+        
+        }
+        for (const auto& [flag, booly] : parser.GetFlags()) {
+            if (booly) {
+                std::cout << "Flag: " << flag << std::endl;
+            }
+        }
+    } else {
+        std::cout << "Something went wrong ot help was declarated";
+    }
     // for (auto now : values) {
     //     std::cout << now << " ";
     // }
@@ -65,38 +82,38 @@ int main(int argc, char** argv) {
 
 
 
-    Options opt;
-    std::vector<int> values;
+//     Options opt;
+//     std::vector<int> values;
 
-    //ArgumentParser::ArgParser parser("Program");
-   parser.AddIntArgument("N").MultiValue(1).Positional().StoreValues(values);
-   parser.AddFlag("sum", "add args").StoreValue(opt.sum);
-    parser.AddFlag("mult", "multiply args").StoreValue(opt.mult);
-    parser.AddHelp('h', "help", "Program accumulate arguments");
+//     //ArgumentParser::ArgParser parser("Program");
+//    parser.AddIntArgument("N").MultiValue(1).Positional().StoreValues(values);
+//    parser.AddFlag("sum", "add args").StoreValue(opt.sum);
+//     parser.AddFlag("mult", "multiply args").StoreValue(opt.mult);
+//     parser.AddHelp('h', "help", "Program accumulate arguments");
 
-    if(!parser.Parse(args)) {
-        std::cout << "Wrong argument" << std::endl;
-        std::cout << parser.HelpDescription() << std::endl;
-        return 1;
-    }
+//     if(!parser.Parse(args)) {
+//         std::cout << "Wrong argument" << std::endl;
+//         std::cout << parser.HelpDescription() << std::endl;
+//         return 1;
+//     }
 
-    if(parser.Help()) {
-        std::cout << parser.HelpDescription() << std::endl;
-        return 0;
-    }
+//     if(parser.Help()) {
+//         std::cout << parser.HelpDescription() << std::endl;
+//         return 0;
+//     }
 
 
-    if(opt.sum) {
-        std::cout << "Result: " << std::accumulate(values.begin(), values.end(), 0) << std::endl;
-    }
-    if(opt.mult) {
-        std::cout << "Result: " << std::accumulate(values.begin(), values.end(), 1, std::multiplies<int>()) << std::endl;
-    } else {
-        std::cout << "No one options had chosen" << std::endl;
-        std::cout << parser.HelpDescription();
-        return 1;
-    }
+//     if(opt.sum) {
+//         std::cout << "Result: " << std::accumulate(values.begin(), values.end(), 0) << std::endl;
+//     }
+//     if(opt.mult) {
+//         std::cout << "Result: " << std::accumulate(values.begin(), values.end(), 1, std::multiplies<int>()) << std::endl;
+//     } else {
+//         std::cout << "No one options had chosen" << std::endl;
+//         std::cout << parser.HelpDescription();
+//         return 1;
+//     }
 
-     return 0;
+//      return 0;
 
 }

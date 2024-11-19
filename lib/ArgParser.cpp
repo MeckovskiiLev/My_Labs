@@ -15,10 +15,7 @@ namespace ArgumentParser {
 
             for (int i = 0; i < args.size(); ++i) {
                 auto arg = args[i];
-                // if (arg == "--help" || arg == "-h") {
-                //     std::cout << HelpDescription() << "\n";
-                //     return true; 
-                // }
+                
 
                 if (arg.find("--") == 0) {
                     std::string name_of_param = arg.substr(2);
@@ -38,21 +35,34 @@ namespace ArgumentParser {
                                 // } else {
                                     arguments[name_of_param].push_back(value);
                                 //}
-                            } else {
+                            } else if (std::find(int_required_args.begin(), int_required_args.end(), name_of_param) != int_required_args.end()){
+                                    if (CheckIfInt(value)) {
+                                        arguments_int[name_of_param].push_back(std::stoi(value));
+                                    } else {
+                                        return false;
+                                    }
+                            }
+                            else {
                                 return false;
                             }
                         }  else {
-                            if (std::find(no_equal.begin(), no_equal.end(), name_of_param) == no_equal.end()) {
+                            if ((std::find(no_equal.begin(), no_equal.end(), name_of_param) == no_equal.end()) 
+                            && (std::find(no_equal_int.begin(), no_equal_int.end(), name_of_param) == no_equal_int.end())) {
+                                
                                 if (std::find(required_flags.begin(), required_flags.end(), name_of_param) != required_flags.end()) {
+                                    
                                     flags[name_of_param] = true;
                                     if (name_of_param == "help") {
                                         help_input = true;
                                     }
                                     
                                 } else {
+                                    
                                     return false;
                                 }
                             }else if (std::find(no_equal.begin(), no_equal.end(), name_of_param) != no_equal.end()){
+
+                                
                                 if (i + 1 < args.size()) {
                                     // if (arguments_int.find(name_of_param) != arguments_int.end()) {
                                     //     if (CheckIfInt(args[i+1])) {
@@ -64,17 +74,26 @@ namespace ArgumentParser {
                                     // } else {
                                         arguments[name_of_param].push_back(args[i+1]);
                                     //}
-                                    i++;
-                                } else {
-                                    return false;
+                                        i++;
+                                } 
+                            } else if (std::find(no_equal_int.begin(), no_equal_int.end(), name_of_param) != no_equal_int.end()) {
+                               
+                                if (i+1<args.size()) {
+                                    if (CheckIfInt(args[i+1])) {
+                                        arguments_int[name_of_param].push_back(std::stoi(args[i+1]));
+                                        i++;
+                                    } else {
+                                        return false;
+                                    }
                                 }
-                                
-                            } 
-                            
-                            else {
-                                return false;
+                            }else {
+                                    return false;
                             }
-                        }
+                                
+                        } 
+                
+                            
+                        
                     
                     
                 } else if (arg[0] == '-' && arg.size() > 1) {
@@ -97,6 +116,12 @@ namespace ArgumentParser {
                             // } else {
                                 arguments[long_arg].push_back(value);
                             //}
+                        } else if (std::find(int_required_args.begin(), int_required_args.end(), long_arg) != int_required_args.end()) {
+                                if (CheckIfInt(value)) {
+                                    arguments_int[long_arg].push_back(std::stoi(value));
+                                } else {
+                                    return false;
+                                }
                         } else {
                             return false; 
                         }
@@ -105,7 +130,8 @@ namespace ArgumentParser {
                         for (size_t j = 1; j < arg.size(); j++) {
                             auto short_arg = arg[j];
                             std::string long_arg = short_to_long_map[short_arg];
-                            if ((std::find(no_equal.begin(), no_equal.end(), long_arg) == no_equal.end())) {
+                            if ((std::find(no_equal.begin(), no_equal.end(), long_arg) == no_equal.end()) 
+                            && (std::find(no_equal_int.begin(), no_equal_int.end(), long_arg) == no_equal_int.end())) {
                                 if (std::find(required_flags.begin(), required_flags.end(), long_arg) != required_flags.end()) {
                                     flags[long_arg] = true;
                                     if (long_arg == "help") {
@@ -127,7 +153,20 @@ namespace ArgumentParser {
                                         arguments[long_arg].push_back(args[i+1]);
                                     //}
                                     i++;
+                                } 
+                            } else if (std::find(no_equal_int.begin(), no_equal_int.end(), long_arg) != no_equal_int.end()) {
+                                if (i+1<args.size()) {
+                                    if (CheckIfInt(args[i+1])) {
+                                            arguments_int[long_arg].push_back(std::stoi(args[i+1]));
+                                            i++;
+                                        } else {
+                                            return false;
+                                        }
+                                } else {
+                                    return false;
                                 }
+                            }  else {
+                                return false;
                             }
                         }
                     }
@@ -136,7 +175,7 @@ namespace ArgumentParser {
             
                 else if (positional_check) {
                     if (CheckIfInt(args[i])) {
-                        arguments[pos_arguments].push_back(args[i]);
+                        arguments_int[pos_arguments].push_back(std::stoi(args[i]));
                     }
                 }
                 
@@ -149,22 +188,13 @@ namespace ArgumentParser {
                 }
             }
             
-            // if (multi_value_check && count >= min_arguments) {
-            //     std::cout << "Enough amount of arguments was written" << "\n";
-            // } else if (multi_value_check && count < min_arguments) {
-            //     std::cout << "Not enough argumennts was written" << "\n";
-            //     return false;
-            // }
-
-            //std::cout << "enter 1 :" << std::endl;
             if (bool_store_values) {
                 for (auto now : store_values_vec) {
-                if (arguments.find(now) != arguments.end()) {
-                    for (const auto value : arguments[now]) {
-                        if (CheckIfInt(value)) {
-                            //std::cout << value << std::endl;
+                if (arguments_int.find(now) != arguments_int.end()) {
+                    for (const auto value : arguments_int[now]) {
+                        
                             try {
-                                int_arguments->push_back(stoi(value));
+                                int_arguments->push_back(value);
                             } catch (const std::invalid_argument&) {
                                 std::cerr << "Invalid argument: " << value << " is not an integer!" << std::endl;
                                 return false;
@@ -173,7 +203,7 @@ namespace ArgumentParser {
                                 return false;
                             }
                             
-                        }
+                        
                     }
 
                 }
@@ -185,13 +215,21 @@ namespace ArgumentParser {
                     *stored_value = arguments[current_key].back();
                 }
             }
-            //std::cout << "enter 2 :" << std::endl;
+            
             if (multi_value_check) {
                 bool flag = true;
                 for (const auto& [param, amount] : multi_vec) {
-                    if (arguments[param].size() < amount) {
-                        std::cerr << "Not enough arguments for " << param << ". Expected at least " << amount << ",but got " << arguments[param].size() << "\n";// << ", but got " << arguments["param1"].size() << ".\n";
-                        flag = false;
+                    if (arguments.find(param) != arguments.end()) {
+                        if (arguments[param].size() < amount) {
+                            std::cerr << "Not enough arguments for " << param << ". Expected at least " << amount << ",but got " << arguments[param].size() << "\n";
+                            flag = false;
+                        }
+                    }
+                    else if (arguments_int.find(param) != arguments_int.end()) {
+                        if (arguments_int[param].size() < amount) {
+                            std::cerr << "Not enough arguments for " << param << ". Expected at least " << amount << ",but got " << arguments_int[param].size() << "\n";
+                            flag = false;
+                        }
                     }
                 }
                 if (!flag) {
@@ -201,22 +239,25 @@ namespace ArgumentParser {
             
 
             
-            //std::cout << "enter 3 :" << std::endl;
+            
 
             for (const auto& req_arg : required_args) {
                 if (arguments.find(req_arg) != arguments.end()) {
                     if (arguments[req_arg].empty() && std::find(required_flags.begin(), required_flags.end(), req_arg) == required_flags.end() 
-                     && !positional_check && !help_check) {//std::find(no_equal.begin(), no_equal.end(), req_arg) == no_equal.end()
+                     && !positional_check && !help_check) {
                         std::cout << req_arg << std::endl;
                         return false;
                     }
                 }
             }
-            
-            
-            //std::cout << "enter 4 :" << std::endl;
-            if (arguments.find("param1") == arguments.end()) {
-                ArgParser::AddStringArgument("param1").Default("Hello_there))))");
+            for (const auto& req_arg : int_required_args) {
+                if (arguments_int.find(req_arg) != arguments_int.end()) {
+                    if (arguments_int[req_arg].empty() && std::find(required_flags.begin(), required_flags.end(), req_arg) == required_flags.end() 
+                     && !positional_check && !help_check) {
+                        std::cout << req_arg << std::endl;
+                        return false;
+                    }
+                }
             }
 
             
@@ -233,7 +274,6 @@ namespace ArgumentParser {
 
     ArgParser& ArgParser::AddStringArgument(const char short_flag, const std::string& long_flag) {
         short_to_long_map.insert(std::make_pair(short_flag, long_flag));
-        arguments[std::string(1, short_flag)] = {};
         required_args.push_back(long_flag);
         no_equal.push_back(long_flag);
         current_key = long_flag;
@@ -243,7 +283,6 @@ namespace ArgumentParser {
 
     ArgParser& ArgParser::AddStringArgument(const char short_flag, const std::string& long_flag, const std::string& declaration) {
         short_to_long_map.insert(std::make_pair(short_flag, long_flag));
-        arguments[std::string(1, short_flag)] = {};
         required_args.push_back(long_flag);
         no_equal.push_back(long_flag);
         current_key = long_flag;
@@ -252,18 +291,17 @@ namespace ArgumentParser {
     }
     ArgParser& ArgParser::AddIntArgument(const std::string& value) {
         current_key = value;
-        required_args.push_back(value);
-        no_equal.push_back(value);
-        arguments[value] = {};
+        int_required_args.push_back(value);
+        no_equal_int.push_back(value);
+        arguments_int[value] = {};
         return *this;
     }
 
     ArgParser& ArgParser::AddIntArgument(const char short_flag, const std::string& long_flag) {
         short_to_long_map.insert(std::make_pair(short_flag, long_flag));
-        arguments[std::string(1, short_flag)] = {};
-        arguments[long_flag] = {};
-        required_args.push_back(long_flag);
-        no_equal.push_back(long_flag);
+        arguments_int[long_flag] = {};
+        int_required_args.push_back(long_flag);
+        no_equal_int.push_back(long_flag);
         current_key = long_flag;
         
         return *this;
@@ -271,19 +309,18 @@ namespace ArgumentParser {
     
     ArgParser& ArgParser::AddIntArgument(const char short_flag, const std::string& long_flag, const std::string& declaration) {
         short_to_long_map.insert(std::make_pair(short_flag, long_flag));
-        arguments[std::string(1, short_flag)] = {};
-        arguments[long_flag] = {};
-        required_args.push_back(long_flag);
-        no_equal.push_back(long_flag);
+        arguments_int[long_flag] = {};
+        int_required_args.push_back(long_flag);
+        no_equal_int.push_back(long_flag);
         current_key = long_flag;
         return *this;
     }
 
     ArgParser& ArgParser::AddIntArgument(const std::string& param, const std::string& declaration) {
         current_key = param;
-        required_args.push_back(current_key);
-        no_equal.push_back(param);
-        arguments[param] = {};
+        int_required_args.push_back(current_key);
+        no_equal_int.push_back(param);
+        arguments_int[param] = {};
         return *this;
     }
 
@@ -293,14 +330,12 @@ namespace ArgumentParser {
         flags[flag] = false;
         required_flags.push_back(flag);
         required_args.push_back(flag);
-        //arguments[flag] = "false";
         current_key = flag;
         return *this; 
     }
 
     ArgParser& ArgParser::AddFlag(const char short_flag, const std::string& long_flag) {
         short_to_long_map.insert(std::make_pair(short_flag, long_flag));
-        arguments[std::string(1, short_flag)] = {};
         current_key = long_flag;
         required_args.push_back(long_flag);
         required_flags.push_back(long_flag);
@@ -313,14 +348,12 @@ namespace ArgumentParser {
         flags[flag] = false;
         required_flags.push_back(flag);
         required_args.push_back(flag);
-        //arguments[flag] = "false";
         current_key = flag;
         return *this; 
     }
 
     ArgParser& ArgParser::AddFlag(const char short_flag, const std::string& long_flag, const std::string& declaration) {
         short_to_long_map.insert(std::make_pair(short_flag, long_flag));
-        arguments[std::string(1, short_flag)] = {};
         current_key = long_flag;
         required_args.push_back(long_flag);
         required_flags.push_back(long_flag);
@@ -332,7 +365,6 @@ namespace ArgumentParser {
     ArgParser& ArgParser::AddHelp(const char short_flag, const std::string& long_flag, const std::string& declaration) {
         help_check = true;
         short_to_long_map.insert(std::make_pair(short_flag, long_flag));
-        arguments[std::string(1, short_flag)] = {};
         current_key = long_flag;
         required_args.push_back(long_flag);
         required_flags.push_back(long_flag);
@@ -344,7 +376,6 @@ namespace ArgumentParser {
     ArgParser& ArgParser::AddHelp(const char short_flag, const std::string& long_flag) {
         help_check = true;
         short_to_long_map.insert(std::make_pair(short_flag, long_flag));
-        arguments[std::string(1, short_flag)] = {};
         current_key = long_flag;
         required_args.push_back(long_flag);
         required_flags.push_back(long_flag);
@@ -415,10 +446,10 @@ namespace ArgumentParser {
     }
 
     int ArgParser::GetIntValue(const std::string& param) const {
-        auto it = arguments.find(param);
-        if (it != arguments.end() && !it->second.empty()) {
+        auto it = arguments_int.find(param);
+        if (it != arguments_int.end() && !it->second.empty()) {
             try {
-                return std::stoi(it->second.front());
+                return it->second.front();
             } 
             catch(const std::invalid_argument&) {
                 std::cerr << "Invalid integer value for argument: " << param << "\n";
@@ -431,23 +462,21 @@ namespace ArgumentParser {
     }
     
     int ArgParser::GetIntValue(const std::string& param, int index) {
-        if (arguments.find(param) != arguments.end()) {
-            if (CheckIfInt(arguments[param][index])) {
-                if (index >= 0 && index < arguments[param].size()) {
-                    return stoi(arguments[param][index]);
+        if (arguments_int.find(param) != arguments_int.end()) {
+                if (index >= 0 && index < arguments_int[param].size()) {
+                    return arguments_int[param][index];
                 }
                 else {
                     std::cout << "Index of int value is out of range, try another one!" << "\n";
                     return -1;
                 }
-            } else {
-                std::cout << "Argument is not an int!" << "\n";
-                return -1;
             }
-        } else {
+         else {
             return -1;
         }
     }
+
+    
 
     std::vector<std::string> ArgParser::CoutParamValue(const std::string& param) const {
     auto it = arguments.find(param);
@@ -465,9 +494,17 @@ namespace ArgumentParser {
         return arguments;
     }
 
+    const std::map<std::string, std::vector<int>>& ArgParser::GetIntArguments() const {
+        return arguments_int;
+    }
+
     const std::vector<std::string>& ArgParser::GetReqArr() const{
         return required_args;
     } 
+
+    const std::vector<std::string>& ArgParser::GetReqArrInt() const {
+        return int_required_args;
+    }
 
     bool ArgParser::CheckIfInt(const std::string& name) {
         try {

@@ -52,10 +52,12 @@ public:
     bool HasArgument(const std::string& param) const;
     
     const std::map<std::string, std::vector<std::string>>& GetArguments() const;
+    const std::map<std::string, std::vector<int>>& GetIntArguments() const;
     bool CheckIfInt(const std::string& name);
     bool GetFlag(const std::string& param) const;
     const std::map<std::string, bool> GetFlags() const;
     const std::vector<std::string>& GetReqArr() const;
+    const std::vector<std::string>& GetReqArrInt() const;
 
     const std::string HelpDescription();
     bool Help();
@@ -86,8 +88,10 @@ private:
     //std::map<std::string, bool> pos_map;
 
     std::vector<std::string> required_flags;// = {"flag1", "flag2", "flag3","flag", "Param1", "help", };
-    std::vector<std::string> no_equal;// = {"number", "input", "param1", "param2", //  "test", "output", "first", "second"};                                        
-    std::vector<std::string> required_args;// = {"param1", "param2", "test", "output", "first", "second"};//"flag", "flag1", "flag2", "flag3", "Param1", "help", , "input", "number"
+    std::vector<std::string> no_equal;// = {"number", "input", "param1", "param2", //  "test", "output", "first", "second"};      
+    std::vector<std::string> no_equal_int;                                  
+    std::vector<std::string> required_args;
+    std::vector<std::string> int_required_args;// = {"param1", "param2", "test", "output", "first", "second"};//"flag", "flag1", "flag2", "flag3", "Param1", "help", , "input", "number"
     std::vector<std::string> store_values_vec;
     std::vector<int>* int_arguments = nullptr;
 
